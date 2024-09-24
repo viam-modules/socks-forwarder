@@ -3,9 +3,11 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
+	"os/exec"
 
 	"go.viam.com/rdk/components/sensor"
 	"go.viam.com/rdk/logging"
@@ -27,7 +29,7 @@ type socksForwarderSensor struct {
 	logger logging.Logger
 }
 
-func newSocksForwarderSensor(_ context.Context,
+func newSocksForwarderSensor(ctx context.Context,
 	_ resource.Dependencies,
 	conf resource.Config,
 	logger logging.Logger,
@@ -51,15 +53,21 @@ func (sfs *socksForwarderSensor) DoCommand(
 	switch cmd {
 	case "start":
 		sfs.logger.Info("Starting the socks-forwarder systemd service...")
-		// TODO
+		if err := controlService(ctx, "start"); err != nil {
+			sfs.logger.Errorw("Error starting the socks-forwarder systemd service", "error", err)
+		}
 		sfs.logger.Info("Started the socks-forwarder systemd service")
 	case "stop":
 		sfs.logger.Info("Stopping the socks-forwarder systemd service...")
-		// TODO
+		if err := controlService(ctx, "stop"); err != nil {
+			sfs.logger.Errorw("Error stopping the socks-forwarder systemd service", "error", err)
+		}
 		sfs.logger.Info("Stopped the socks-forwarder systemd service")
 	case "restart":
 		sfs.logger.Info("Restarting the socks-forwarder systemd service...")
-		// TODO
+		if err := controlService(ctx, "restart"); err != nil {
+			sfs.logger.Errorw("Error restarting the socks-forwarder systemd service", "error", err)
+		}
 		sfs.logger.Info("Restarted the socks-forwarder systemd service")
 	default:
 		return nil, fmt.Errorf("unknown 'command' %q", cmd)
@@ -68,12 +76,36 @@ func (sfs *socksForwarderSensor) DoCommand(
 	return nil, nil
 }
 
+// Uses `systemctl` to put the "socks-forwarder" service into `state`.
+func controlService(ctx context.Context, state string) error {
+	cmd := exec.CommandContext(ctx, "systemctl", state, "socks-forwarder")
+	return cmd.Run()
+}
+
+/* Readings from hciconfig look like
+hci0:	Type: Primary  Bus: UART
+	BD Address: 14:D4:24:7F:75:A4  ACL MTU: 1021:8  SCO MTU: 64:1
+	UP RUNNING PSCAN
+	RX bytes:3602 acl:0 sco:0 events:375 errors:0
+	TX bytes:62782 acl:0 sco:0 commands:375 errors:0
+*/
+
+// Readings returns the RX and TX byte totals of the hci0 (bluetooth)
+// adapter.
 func (sfs *socksForwarderSensor) Readings(
 	ctx context.Context,
 	_ map[string]interface{},
 ) (map[string]interface{}, error) {
 	readings := make(map[string]interface{})
-	// TODO gather readings from syscall to `ifconfig`.
+	cmd := exec.CommandContext(ctx, "hciconfig")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	if err := cmd.Run(); err != nil {
+		sfs.logger.Errorf("Error running 'hciconfig' to get readings: ", err)
+		return nil, err
+	}
+	hciconfigOutput := out.String()
+	fmt.Println(out.String())
 	return readings, nil
 }
 
