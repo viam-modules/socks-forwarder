@@ -13,7 +13,7 @@ import (
 	"go.viam.com/rdk/resource"
 )
 
-var socksForwarderSensorModel = resource.NewModel("viam", "sensor", "socks-forwarder-sensor")
+var socksForwarderSensorModel = resource.NewModel("viam", "sensor", "socks-forwarder")
 
 // socksForwarderSensor reports the current tx/rx of hci0 (bluetooth adapter)
 // through its `Readings`. It also accepts `DoCommand` calls to start, stop and
