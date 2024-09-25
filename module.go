@@ -96,7 +96,6 @@ func (sfs *socksForwarderSensor) Readings(
 	ctx context.Context,
 	_ map[string]interface{},
 ) (map[string]interface{}, error) {
-	readings := make(map[string]interface{})
 	cmd := exec.CommandContext(ctx, "hciconfig")
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -104,9 +103,8 @@ func (sfs *socksForwarderSensor) Readings(
 		sfs.logger.Errorf("Error running 'hciconfig' to get readings: ", err)
 		return nil, err
 	}
-	hciconfigOutput := out.String()
-	fmt.Println(out.String())
-	return readings, nil
+	// TODO(benji): Manually structure the data.
+	return map[string]interface{}{"hciconfig_output": out.String()}, nil
 }
 
 func main() {
