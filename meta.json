@@ -1,0 +1,14 @@
+{
+  "$schema": "https://dl.viam.dev/module.schema.json",
+  "module_id": "viam:socks-forwarder",
+  "visibility": "private",
+  "url": "https://github.com/viam-modules/socks-forwarder",
+  "description": "SOCKS-BLE forwarder",
+  "models": [
+    {
+      "api": "rdk:component:sensor",
+      "model": "viam:socks:forwarder"
+    }
+  ],
+  "entrypoint": "run.sh"
+}
