@@ -10,5 +10,5 @@
       "model": "viam:socks:forwarder"
     }
   ],
-  "entrypoint": "socks-forwarder"
+  "entrypoint": "run.sh"
 }
