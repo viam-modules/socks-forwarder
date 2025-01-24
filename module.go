@@ -17,6 +17,10 @@ import (
 
 var socksForwarderSensorModel = resource.NewModel("viam", "socks", "forwarder")
 
+// Keeps track of whether hciconfig is usable on the current machine. Will stop `Readings`
+// from calling hciconfig if set to false.
+var hciconfigUsable bool
+
 // socksForwarderSensor reports the current tx/rx of hci0 (bluetooth adapter)
 // through its `Readings`. It also accepts `DoCommand` calls to start, stop and
 // restart the socks forwarder systemd process.
@@ -100,10 +104,11 @@ func (sfs *socksForwarderSensor) Readings(
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	if err := cmd.Run(); err != nil {
-		sfs.logger.Errorf("Error running 'hciconfig' to get readings: ", err)
-		return nil, err
+		sfs.logger.Errorw("Error running 'hciconfig' to get readings. Will not fetch readings again", "error", err.Error())
+		return nil, nil
 	}
-	// TODO(benji): Manually structure the data.
+
+	hciconfigUsable = true // Assume hciconfig usable upon error.
 	return map[string]interface{}{"hciconfig_output": out.String()}, nil
 }
 
