@@ -80,7 +80,7 @@ func controlService(ctx context.Context, state string) error {
 }
 
 func main() {
-	resource.RegisterComponent(generic.API, socksForwarderControllerModel,
+	resource.RegisterService(generic.API, socksForwarderControllerModel,
 		resource.Registration[resource.Resource, resource.NoNativeConfig]{
 			Constructor: newSocksForwarderController,
 		})
