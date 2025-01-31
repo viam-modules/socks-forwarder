@@ -77,9 +77,10 @@ architecture (likely aarch64) to compile the .deb correctly.
 
 To update the module:
 - Commit any changes directly to the `main` branch of this repository
-- Run `go build .` to to build the `socks-forwarder-module` binary
+- Run `go build .` to build the `socks-forwarder-module` binary while on the desired OS
+  and architecture
 - Ensure the `viam` CLI tool [installed](https://docs.viam.com/dev/tools/cli/#install)
 - Ensure you are logged in with `viam login`
     - You must have write privileges for the `socks-forwarder` module
-- Run `viam module upload --version "[new-version]" --platform "[platform]" meta.json`
+- Run `viam module upload --version "[new-version]" --platform "[platform]" .`
   from the top of this directory
