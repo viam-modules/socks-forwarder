@@ -42,7 +42,7 @@ field should be updated as necessary.
       "module_id": "viam:socks-forwarder",
       "name": "socks-forwarder",
       "type": "registry",
-      "version": "~0.0.7"
+      "version": "~0.0.8"
     }
   ]
 }
