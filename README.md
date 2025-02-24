@@ -71,14 +71,18 @@ TODO
 The .deb file (dpkg) must be manually updated by running `make dpkg` in [this
 repo](https://github.com/viam-labs/ble-managed/tree/9aca1c2a0709056b442c408e34c8dc5f01d392b6/socks-forwarder)
 and copying the created .deb file to this repo. `make dpkg` must be run on the appropriate
-architecture (likely aarch64) to compile the .deb correctly.
+architecture (likely aarch64) to compile the .deb correctly. See README in the ble-managed repo
+for more instructions on how to rebuild the dpkg.
 
 ### Updating the module
 
 To update the module:
-- Commit any changes directly to the `main` branch of this repository
 - Run `go build .` to build the `socks-forwarder-module` binary while on the desired OS
-  and architecture
+  and architecture (only needed if changes to go code have been made; no need if only
+  updating dpkg)
+- Update dpkg to latest version (see section above)
+- Update run.sh to refer to correct artifact (0.1 -> 0.2 in name of dpkg for example)
+- Commit any changes directly to the `main` branch of this repository
 - Ensure the `viam` CLI tool [installed](https://docs.viam.com/dev/tools/cli/#install)
 - Ensure you are logged in with `viam login`
     - You must have write privileges for the `socks-forwarder` module
