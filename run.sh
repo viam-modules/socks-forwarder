@@ -2,6 +2,6 @@
 cd `dirname $0`
 
 echo "Installing the SOCKS forwarder systemd service if it has not already been installed"
-sudo dpkg -E -i ./socks-forwarder_0.7_arm64.deb
+sudo dpkg -E -i ./socks-forwarder_0.8_arm64.deb
 
 exec ./socks-forwarder-module $@
