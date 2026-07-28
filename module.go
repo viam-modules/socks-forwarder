@@ -84,5 +84,5 @@ func main() {
 		resource.Registration[resource.Resource, resource.NoNativeConfig]{
 			Constructor: newSocksForwarderController,
 		})
-	module.ModularMain("socks-forwarder", resource.APIModel{generic.API, socksForwarderControllerModel})
+	module.ModularMain(resource.APIModel{generic.API, socksForwarderControllerModel})
 }
